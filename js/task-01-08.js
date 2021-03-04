@@ -1,4 +1,118 @@
+// import images from './pictures-gallery.js';
 
+// const bodyRef = document.querySelector('body')
+// const imagesListRef = document.querySelector('.js-gallery');
+// const modalRef = document.querySelector('.js-lightbox');
+// const modalOverlay = document.querySelector('.lightbox__overlay');
+// const modalImgRef = document.querySelector('.lightbox__image');
+// const closeModal = document.querySelector('.lightbox__button');
+
+// let currentImg = 0;
+// let currentAlt = 0;
+
+// const imgArray = images.reduce((acc, { original }) => {
+//   acc.push(original);
+//   return acc;
+// }, []);
+
+// const altArray = images.reduce((acc, { description }) => {
+//   acc.push(description);
+//   return acc;
+// }, []);
+
+// const imagesMarkup = images.reduce(
+//   (acc, {preview, original, description}) => {
+//     return (
+//       acc +
+//       `<li class="gallery__item">
+//   <a
+//     class="gallery__link"
+//     href="${original}"
+//   >
+//     <img
+//       class="gallery__image"
+//       src="${preview}"
+//       data-source="${original}"
+//       alt="${description}"
+//     />
+//   </a>
+// </li>`
+//     );
+//   },
+//   '',
+// );
+
+// imagesListRef.insertAdjacentHTML('afterbegin', imagesMarkup);
+
+// imagesListRef.addEventListener('click', event => {
+//   event.preventDefault();
+//   if (event.target.localName === 'img') {
+//     addImgModal();
+//     currentImg = imgArray.indexOf(modalImgRef.src);
+//     currentAlt = altArray.indexOf(modalImgRef.alt);
+//   }
+// });
+
+// closeModal.addEventListener('click', () => {
+//   removeImgModal();
+// });
+
+// modalOverlay.addEventListener('click', event => {
+//   if (event.target.localName === 'img') {
+//     return;
+//   }
+//   removeImgModal();
+// });
+
+// window.addEventListener('keyup', event => {
+//   if (event.key === 'Escape') {
+//     removeImgModal();
+//   }
+// });
+
+// function removeImgModal() {
+//   bodyRef.classList.remove('is-open')
+//   modalRef.classList.remove('is-open');
+//   modalImgRef.src = '';
+//   modalImgRef.alt = '';
+// }
+
+// function addImgModal() {
+//   bodyRef.classList.add('is-open')
+//   modalRef.classList.add('is-open');
+//   modalImgRef.src = event.target.dataset.source;
+//   modalImgRef.alt = event.target.alt;
+// }
+
+// window.addEventListener('keyup', event => {
+//   if (event.key === 'ArrowRight') {
+//     modalImgRef.src =
+//       imgArray[
+//         currentImg === imgArray.length ? (currentImg = 0) : currentImg++
+//       ];
+//     modalImgRef.alt =
+//       altArray[
+//         currentAlt === altArray.length ? (currentAlt = 0) : currentAlt++
+//       ];
+//   }
+// });
+
+// window.addEventListener('keyup', event => {
+//   if (event.key === 'ArrowLeft') {
+//     modalImgRef.src =
+//       imgArray[
+//         currentImg === -1
+//           ? (currentImg = currentImg + imgArray.length)
+//           : currentImg--
+//       ];
+//     modalImgRef.alt =
+//       altArray[
+//         currentAlt === -1
+//           ? (currentAlt = currentAlt + altArray.length)
+//           : currentAlt--
+//       ];
+//   }
+// });
 // Создание и рендер разметки по массиву данных и предоставленному шаблону.
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
 // Открытие модального окна по клику на элементе галереи. Для того чтобы открыть, 
@@ -25,6 +139,8 @@ const refs = {
 
 };
 
+
+
 function createImgCard(pictures) { 
   return pictures
     .map(({ preview, original, description }) => {
@@ -47,16 +163,17 @@ refs.imgContainer.addEventListener('click', onImgContainerClick);
 refs.closeModalBtn.addEventListener('click', onCloseBtnClick);
 refs.lightboxOverlay.addEventListener('click', onBackdropClick);
 
-//const collection = Array.prototype.slice.call(document.querySelectorAll('[data-source]'));
-const collection = pictures.reduce((acc, { original }) => {
+
+const imgArray = pictures.reduce((acc, { original }) => {
   acc.push(original);
   return acc;
 }, []);
-const collection2 = pictures.reduce((acc, { description }) => {
+const altArray = pictures.reduce((acc, { description }) => {
   acc.push(description);
   return acc;
 }, []);
-
+let currentImg = 0;
+let currentAlt = 0;
 
 function onImgContainerClick(event) { 
    event.preventDefault(); 
@@ -69,9 +186,11 @@ function onImgContainerClick(event) {
 refs.lightboxImage.src = event.target.dataset.source;
   refs.lightboxImage.alt = event.target.alt;
 
+  
+
   window.addEventListener("keydown", onEscKeyPress);
-  window.addEventListener("keydown", onRightKeyPress);
-  window.addEventListener("keydown", onLeftKeyPress);
+  // window.addEventListener("keydown", onRightKeyPress);
+  // window.addEventListener("keydown", onLeftKeyPress);
 }
 
 function onCloseBtnClick(event) { 
@@ -81,8 +200,8 @@ function onCloseBtnClick(event) {
   refs.lightboxImage.alt = '';
   
   window.removeEventListener("keydown", onEscKeyPress);
-  window.removeEventListener("keydown", onRightKeyPress);
-  window.removeEventListener("keydown", onLeftKeyPress);
+  // window.removeEventListener("keydown", onRightKeyPress);
+  // window.removeEventListener("keydown", onLeftKeyPress);
 }
 
 function onBackdropClick(event) { 
@@ -101,71 +220,63 @@ function onEscKeyPress(event) {
  onCloseBtnClick();
 }
 }
-let src = 0;
-  let alt = 0;
-function onRightKeyPress(event) {
-  if (event.code !== "ArrowRight") {
-    return;
-  }
-  
 
-  refs.lightboxImage.src =
-      collection[
-        src === collection.length ? (src = 0) : src++
-    ];
-   refs.lightboxImage.alt =
-     collection2[
-        alt === collection2.length ? (alt = 0) : alt++
-      ];
-  
-    // refs.lightboxImage.src = collection[index].dataset.source;
-    //   refs.lightboxImage.alt = collection[index].alt;
-    //console.log(collection.length - 1);
-  // console.log(collection[index]);
-  // console.log(collection[index]);
-  //  console.log(collection[index]);
-  }
-
-
-// collection.forEach(function(img,i) {
-//         img.addEventListener('click', function(event) {
-//           event.preventDefault();
-//           index = i;
-//         },false);
-//     });
- 
-// btnLeft.addEventListener('click', function(e) {
-//  e.preventDefault();
-// index--
-// index < 0 && (index = collection.length-1);
-// show();
-
-// },false)
-
-// btnRight.addEventListener('click', function(e) {
-//  e.preventDefault();
-//  index++
-// index >= collection.length && (index = 0);
-//   show();
-// },false)
-
-// function show() {
-
-//     fotoGallery.classList.remove('kap-show__hidden-gallery');
-
-//     hiddenImg.src = collection[index].src;
-
-// };
-
+window.addEventListener('keydown', event => {
+    if (event.key === 'ArrowRight') {
+      refs.lightboxImage.src =
+        imgArray[
+          currentImg === imgArray.length ? (currentImg = 0) : currentImg++
+        ];
+      refs.lightboxImage.alt =
+        altArray[
+          currentAlt === altArray.length ? (currentAlt = 0) : currentAlt++
+        ];
+    }
+  });
+  window.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft') {
+      refs.lightboxImage.src =
+        imgArray[
+          currentImg === -1
+            ? (currentImg = currentImg + imgArray.length)
+            : currentImg--
+        ];
+      refs.lightboxImage.alt =
+        altArray[
+          currentAlt === -1
+            ? (currentAlt = currentAlt + altArray.length)
+            : currentAlt--
+        ];
+    }
+  });
+// function onRightKeyPress (event) {
+//     if (event.key === 'ArrowRight') {
+//       refs.lightboxImage.src =
+//         imgArray[
+//           currentImg === imgArray.length ? (currentImg = 0) : currentImg++
+//         ];
+//       refs.lightboxImage.alt =
+//         altArray[
+//           currentAlt === altArray.length ? (currentAlt = 0) : currentAlt++
+//         ];
+//     }
+//   };
   
 
 
-
-// refs.lightboxImage.src =  'https://cdn.pixabay.com/photo/2019/05/17/04/35/lighthouse-4208843_1280.jpg';
-//   refs.lightboxImage.alt = event.currentTarget.alt;
-
-function onLeftKeyPress(event) {
-  if (event.code === "ArrowLeft") {
-    
-  }
-}
+// function onLeftKeyPress(event) {
+//   if (event.code === "ArrowLeft") {
+//     refs.lightboxImage.src =
+//         imgArray[
+//           currentImg === -1
+//             ? (currentImg = currentImg + imgArray.length)
+//             : currentImg--
+//         ];
+//       refs.lightboxImage.alt =
+//         altArray[
+//           currentAlt === -1
+//             ? (currentAlt = currentAlt + altArray.length)
+//             : currentAlt--
+//         ];
+//   }
+// }
