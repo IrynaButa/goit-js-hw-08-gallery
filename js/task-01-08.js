@@ -47,7 +47,16 @@ refs.imgContainer.addEventListener('click', onImgContainerClick);
 refs.closeModalBtn.addEventListener('click', onCloseBtnClick);
 refs.lightboxOverlay.addEventListener('click', onBackdropClick);
 
-const collection = Array.prototype.slice.call(document.querySelectorAll('[data-source]'));
+//const collection = Array.prototype.slice.call(document.querySelectorAll('[data-source]'));
+const collection = pictures.reduce((acc, { original }) => {
+  acc.push(original);
+  return acc;
+}, []);
+const collection2 = pictures.reduce((acc, { description }) => {
+  acc.push(description);
+  return acc;
+}, []);
+
 
 function onImgContainerClick(event) { 
    event.preventDefault(); 
@@ -92,23 +101,29 @@ function onEscKeyPress(event) {
  onCloseBtnClick();
 }
 }
-
+let src = 0;
+  let alt = 0;
 function onRightKeyPress(event) {
   if (event.code !== "ArrowRight") {
     return;
   }
-  let index = 0;
-  if (index > 1) { 
-    index += 1;
-  }
   
+
+  refs.lightboxImage.src =
+      collection[
+        src === collection.length ? (src = 0) : src++
+    ];
+   refs.lightboxImage.alt =
+     collection2[
+        alt === collection2.length ? (alt = 0) : alt++
+      ];
   
-    refs.lightboxImage.src = collection[index].dataset.source;
-      refs.lightboxImage.alt = collection[index].alt;
+    // refs.lightboxImage.src = collection[index].dataset.source;
+    //   refs.lightboxImage.alt = collection[index].alt;
     //console.log(collection.length - 1);
-  console.log(collection[index]);
-  console.log(collection[index]);
-   console.log(collection[index]);
+  // console.log(collection[index]);
+  // console.log(collection[index]);
+  //  console.log(collection[index]);
   }
 
 
