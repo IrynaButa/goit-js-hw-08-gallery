@@ -45,7 +45,7 @@ function createImgCard(pictures) {
 
 const cardsMarkup = createImgCard(pictures);
 refs.imgContainer.insertAdjacentHTML("beforeend", cardsMarkup);
-refs.imgContainer.addEventListener('click', onImgContainerClick);
+//refs.imgContainer.addEventListener('click', onImgContainerClick);
 refs.closeModalBtn.addEventListener('click', onCloseBtnClick);
 refs.lightboxOverlay.addEventListener('click', onBackdropClick);
 
@@ -58,8 +58,19 @@ const altArray = pictures.reduce((acc, { description }) => {
   acc.push(description);
   return acc;
 }, []);
+
+
 let currentImg = 0;
 let currentAlt = 0;
+
+refs.imgContainer.addEventListener('click', event => {
+  
+   onImgContainerClick(event);
+    currentImg = imgArray.indexOf(refs.lightboxImage.src);
+    currentAlt = altArray.indexOf(refs.lightboxImage.alt);
+  // }
+});
+
 
 function onImgContainerClick(event) { 
    event.preventDefault(); 
@@ -72,11 +83,9 @@ function onImgContainerClick(event) {
 refs.lightboxImage.src = event.target.dataset.source;
   refs.lightboxImage.alt = event.target.alt;
 
-  
-
   window.addEventListener("keydown", onEscKeyPress);
-  // window.addEventListener("keydown", onRightKeyPress);
-  // window.addEventListener("keydown", onLeftKeyPress);
+  window.addEventListener("keydown", onRightKeyPress);
+  window.addEventListener("keydown", onLeftKeyPress);
 }
 
 function onCloseBtnClick(event) { 
@@ -86,8 +95,8 @@ function onCloseBtnClick(event) {
   refs.lightboxImage.alt = '';
   
   window.removeEventListener("keydown", onEscKeyPress);
-  // window.removeEventListener("keydown", onRightKeyPress);
-  // window.removeEventListener("keydown", onLeftKeyPress);
+  window.removeEventListener("keydown", onRightKeyPress);
+  window.removeEventListener("keydown", onLeftKeyPress);
 }
 
 function onBackdropClick(event) { 
@@ -100,69 +109,37 @@ function addIsOpenImgClass(image) {
   
 }
 
-
 function onEscKeyPress(event) { 
   if (event.code === "Escape") {
  onCloseBtnClick();
 }
 }
 
-window.addEventListener('keydown', event => {
-    if (event.key === 'ArrowRight') {
-      refs.lightboxImage.src =
-        imgArray[
-          currentImg === imgArray.length ? (currentImg = 0) : currentImg++
-        ];
-      refs.lightboxImage.alt =
-        altArray[
-          currentAlt === altArray.length ? (currentAlt = 0) : currentAlt++
-        ];
+function onRightKeyPress (event) {
+  if (event.code === 'ArrowRight') {
+      if (currentImg === imgArray.length-1) {
+  currentImg = 0
+} else { currentImg += 1 }
+    refs.lightboxImage.src = imgArray[currentImg];
+
+    if (currentAlt === altArray.length-1) {
+  currentAlt = 0
+} else { currentAlt+=1}
+      refs.lightboxImage.alt = altArray[currentAlt];
     }
-  });
-  window.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft') {
-      refs.lightboxImage.src =
-        imgArray[
-          currentImg === -1
-            ? (currentImg = currentImg + imgArray.length)
-            : currentImg--
-        ];
-      refs.lightboxImage.alt =
-        altArray[
-          currentAlt === -1
-            ? (currentAlt = currentAlt + altArray.length)
-            : currentAlt--
-        ];
-    }
-  });
-// function onRightKeyPress (event) {
-//     if (event.key === 'ArrowRight') {
-//       refs.lightboxImage.src =
-//         imgArray[
-//           currentImg === imgArray.length ? (currentImg = 0) : currentImg++
-//         ];
-//       refs.lightboxImage.alt =
-//         altArray[
-//           currentAlt === altArray.length ? (currentAlt = 0) : currentAlt++
-//         ];
-//     }
-//   };
+  };
   
 
-
-// function onLeftKeyPress(event) {
-//   if (event.code === "ArrowLeft") {
-//     refs.lightboxImage.src =
-//         imgArray[
-//           currentImg === -1
-//             ? (currentImg = currentImg + imgArray.length)
-//             : currentImg--
-//         ];
-//       refs.lightboxImage.alt =
-//         altArray[
-//           currentAlt === -1
-//             ? (currentAlt = currentAlt + altArray.length)
-//             : currentAlt--
-//         ];
-//   }
-// }
+function onLeftKeyPress(event) {
+  if (event.code === "ArrowLeft") {
+      if (currentImg === -1) {
+        currentImg = currentImg + imgArray.length
+      } else {currentImg -= 1 }
+      refs.lightboxImage.src = imgArray[currentImg];
+      if (currentAlt === -1) {
+        currentAlt = currentAlt + altArray.length
+      } else {currentAlt -= 1 }
+        refs.lightboxImage.alt = altArray[currentAlt];
+    }
+    
+  }
