@@ -15,17 +15,12 @@ import pictures from "./pictures-gallery.js";
 
 const refs = {
   imgContainer: document.querySelector("ul.js-gallery"),
-  image: document.getElementsByClassName('.gallery__image'),
-  imageItem: document.querySelector('.gallery__item'),
   lightbox: document.querySelector("div.lightbox"),
   closeModalBtn: document.querySelector('button[data-action="close-lightbox"]'),
-  lightboxContent: document.querySelector("div.lightbox__content"),
   lightboxImage: document.querySelector(".lightbox__image"),
   lightboxOverlay: document.querySelector('div.lightbox__overlay'),
 
 };
-
-
 
 function createImgCard(pictures) { 
   return pictures
@@ -45,31 +40,9 @@ function createImgCard(pictures) {
 
 const cardsMarkup = createImgCard(pictures);
 refs.imgContainer.insertAdjacentHTML("beforeend", cardsMarkup);
-//refs.imgContainer.addEventListener('click', onImgContainerClick);
+refs.imgContainer.addEventListener('click', onImgContainerClick);
 refs.closeModalBtn.addEventListener('click', onCloseBtnClick);
 refs.lightboxOverlay.addEventListener('click', onBackdropClick);
-
-
-const imgArray = pictures.reduce((acc, { original }) => {
-  acc.push(original);
-  return acc;
-}, []);
-const altArray = pictures.reduce((acc, { description }) => {
-  acc.push(description);
-  return acc;
-}, []);
-
-
-let currentImg = 0;
-let currentAlt = 0;
-
-refs.imgContainer.addEventListener('click', event => {
-  
-   onImgContainerClick(event);
-    currentImg = imgArray.indexOf(refs.lightboxImage.src);
-    currentAlt = altArray.indexOf(refs.lightboxImage.alt);
-  // }
-});
 
 
 function onImgContainerClick(event) { 
@@ -115,7 +88,24 @@ function onEscKeyPress(event) {
 }
 }
 
-function onRightKeyPress (event) {
+let currentImg = 0;
+let currentAlt = 0;
+
+const imgArray = pictures.reduce((acc, { original }) => {
+  acc.push(original);
+  return acc;
+}, []);
+const altArray = pictures.reduce((acc, { description }) => {
+  acc.push(description);
+  return acc;
+}, []);
+
+
+ 
+function onRightKeyPress(event) {
+  currentImg = imgArray.indexOf(refs.lightboxImage.src);
+    currentAlt = altArray.indexOf(refs.lightboxImage.alt);
+
   if (event.code === 'ArrowRight') {
       if (currentImg === imgArray.length-1) {
   currentImg = 0
